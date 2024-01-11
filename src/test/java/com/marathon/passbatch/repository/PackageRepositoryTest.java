@@ -1,7 +1,7 @@
 package com.marathon.passbatch.repository;
 
-import static org.junit.jupiter.api.AssertTrue.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertNotNull;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 import java.time.LocalDateTime;
@@ -10,6 +10,7 @@ import java.util.List;
 import com.marathon.passbatch.repository.packaze.PackageEntity;
 import com.marathon.passbatch.repository.packaze.PackageRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +37,7 @@ public class PackageRepositoryTest {
         packageRepository.save(packageEntity);
 
         // then
-        assertNotnull(packageEntity.getPackageSeq());
+        assertNotNull("1",packageEntity.getPackageSeq());
     }
 
     @Test
@@ -92,15 +93,11 @@ public class PackageRepositoryTest {
         packageEntity.setCount(1);
         PackageEntity newPackageEntity = packageRepository.save(packageEntity);
 
-
         // when
         packageRepository.deleteById(newPackageEntity.getPackageSeq());
 
-
         // then
-        assertTrue(packageRepository.findById(newPackageEntity.getPackageSeq()).isEmpty());
-
-
+        Assertions.assertTrue(packageRepository.findById(newPackageEntity.getPackageSeq()).isEmpty());
 
     }
 
