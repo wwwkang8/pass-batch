@@ -8,22 +8,15 @@ import com.marathon.passbatch.repository.pass.PassStatus;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.StepContribution;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaCursorItemReader;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.builder.JpaCursorItemReaderBuilder;
 import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
-import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -32,7 +25,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class ExpirePassesJobConfig {
 
     private final int CHUNK_SIZE = 5;
-    private EntityManagerFactory entityManagerFactory;
+    private final EntityManagerFactory entityManagerFactory;
+
+    public ExpirePassesJobConfig(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
+    // = Persistence.createEntityManagerFactory("com.marathon.passbatch.repository.pass.PassEntity");
 
     /**
      * Job은 배치 프로세스의 최상위 개념. 하나 이상의 Step을 포함한다.
@@ -40,7 +38,7 @@ public class ExpirePassesJobConfig {
      * */
     @Bean
     public Job expirePassesJob(JobRepository jobRepository, Step expirePassesStep) {
-        return new JobBuilder("expireJob", jobRepository)
+        return new JobBuilder("expirePassesJob", jobRepository)
                     .start(expirePassesStep)
                     .build();
     }
@@ -83,7 +81,7 @@ public class ExpirePassesJobConfig {
     @Bean
     public ItemProcessor<PassEntity, PassEntity> expirePassesItemProcessor() {
         return passEntity -> {
-            passEntity.setPassStatus(PassStatus.EXPIRED);
+            passEntity.setStatus(PassStatus.EXPIRED);
             passEntity.setExpiredAt(LocalDateTime.now());
             return passEntity;
         };

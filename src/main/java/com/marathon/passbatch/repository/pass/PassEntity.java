@@ -31,18 +31,18 @@ public class PassEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer passSeq;
+    private Integer packageSeq;
     private String userId;
-    private Integer pacakageSeq;
 
     @Enumerated(EnumType.STRING)
-    private PassStatus passStatus;
+    private PassStatus status;
     private Integer remainingCount;
 
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
     private LocalDateTime expiredAt;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private UserEntity userEntity;
 
