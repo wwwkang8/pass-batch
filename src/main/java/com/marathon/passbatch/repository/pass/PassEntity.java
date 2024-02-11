@@ -26,6 +26,9 @@ public class PassEntity extends BaseEntity {
 
     /**
      * @Entity : 데이터베이스와 객체간의 맵핑을 시작하는데 사용.
+     *
+     * PassEntity : 이용권 객체. 어느 사용자가 어떤 패키지를 사용하는지를 보여주는 객체이다.
+     *
      * */
 
     @Id
