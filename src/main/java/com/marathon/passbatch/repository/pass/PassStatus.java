@@ -4,6 +4,7 @@ public enum PassStatus {
 
     REGISTER,
     EXPIRED,
+    READY,
     PROGRESSED
 
 }
